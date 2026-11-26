@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ПАО «Кокс» · Рабочее место начальника смены и диспетчера · прототип Атвинты</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&display=swap">
+<style>
+/* фирменный стиль ПМХ / ПАО «Кокс» по metholding.ru: синий #0b91db, темно-синий #006eb7, голубой #a6e7ff, фон #f1f9fc, текст #373737;
+   шрифт сайта TT Hoves (платный) заменен на Onest. Данные условные; термины — общая практика коксохимии, сверить с технологами */
+:root{--p:#0b91db;--p2:#006eb7;--ink:#373737;--g:#6b7378;--bg:#f1f9fc;--sky:#a6e7ff;--ok:#1f9d55;--bad:#c62828;--warn:#a06d00}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Onest',Arial,sans-serif;color:var(--ink);background:#fff}
+.demo{background:var(--p2);color:#fff;font-size:12px;padding:6px 24px}
+.top{display:flex;align-items:center;gap:22px;padding:14px 24px;border-bottom:1px solid #e3eef3}
+.logo{display:flex;align-items:center;gap:12px;font-weight:600}.logo img{width:44px;height:44px}
+.logo small{display:block;font-size:12px;font-weight:400;color:var(--g)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:0;background:var(--bg);border-radius:160px;padding:9px 16px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+.tab.on{background:var(--p);color:#fff}
+.who{margin-left:auto;font-size:13px;color:var(--g);text-align:right}
+main{padding:22px 24px;max-width:1400px;margin:0 auto}
+h1{font-size:28px;font-weight:500}.sub{color:var(--g);margin-top:6px;font-size:14px}
+.kp{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin:18px 0}
+.kp div{background:var(--bg);border-radius:18px;padding:14px 16px}
+.kp b{display:block;font-size:26px;font-weight:500}.kp span{font-size:12px;color:var(--g)}
+.kp .bad b{color:var(--bad)}.kp .wr b{color:var(--warn)}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.card{background:var(--bg);border-radius:22px;padding:20px}
+.card h2{font-size:18px;font-weight:500;margin-bottom:10px}
+.sw{display:flex;gap:6px;margin-bottom:6px}.sw button{border:0;border-radius:160px;padding:6px 12px;font:inherit;font-size:12px;background:#fff;cursor:pointer}.sw button.on{background:var(--p2);color:#fff}
+.chart{display:flex;align-items:flex-end;gap:2px;height:180px;position:relative;margin-top:6px}
+.chart i{flex:1;background:#b9cdd6;border-radius:2px 2px 0 0}
+.chart i.lo{background:var(--bad)}.chart i.hi{background:var(--warn)}.chart i.sel{outline:2px solid var(--ink)}
+.band{position:absolute;left:0;right:0;border-top:1px dashed var(--ok);border-bottom:1px dashed var(--ok);background:rgba(31,157,85,.07)}
+.legend{font-size:12px;color:var(--g);margin-top:6px;display:flex;justify-content:space-between}
+.dev{background:#fff;border-radius:16px;padding:13px 15px;margin-bottom:8px;cursor:pointer;border:2px solid transparent}
+.dev.on{border-color:var(--p2)}
+.dev .t{display:flex;justify-content:space-between;font-weight:500;font-size:15px}
+.dev .t em{font-style:normal;font-size:11px;border-radius:20px;padding:3px 9px;background:#fde8e8;color:var(--bad)}
+.dev .t em.w{background:#fff4d6;color:var(--warn)}.dev .t em.d{background:#e2f5ea;color:var(--ok)}
+.dev p{font-size:13px;color:var(--g);margin-top:5px}
+.dev.done{opacity:.55}
+.ai{background:#fff;border-radius:16px;padding:16px;margin-top:12px}
+.ai .h{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g);margin-bottom:8px}
+.ai .h b{background:var(--p2);color:#fff;border-radius:8px;padding:3px 8px;font-weight:500}
+.ai p{font-size:14px;line-height:1.5;margin-bottom:6px}
+.src{font-size:12px;background:var(--bg);border-radius:10px;padding:8px 10px;margin:6px 0;color:var(--g)}.src b{color:var(--ink);font-weight:500}
+.calc{font-size:12px;color:var(--g);border-left:3px solid var(--p);padding-left:10px;margin:6px 0}
+.btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:160px;padding:10px 18px;font:inherit;font-size:13px;cursor:pointer}
+.btn.pk{background:var(--p);color:#fff}.btn.gr{background:var(--bg)}.btn:disabled{opacity:.45;cursor:default}
+.note{font-size:12px;color:var(--g);margin-top:8px}
+table{width:100%;border-collapse:collapse;background:var(--bg);border-radius:18px;overflow:hidden}
+td,th{padding:9px 12px;text-align:left;font-size:13px;border-bottom:1px solid #dde9ee}
+th{font-weight:500;color:var(--g);background:#e8f4f9}
+tr.late td{background:#fff6e0}tr.miss td{background:#fdecec}
+.tag{font-size:11px;border-radius:20px;padding:2px 8px;background:#e2f5ea;color:var(--ok)}
+.tag.w{background:#fff4d6;color:var(--warn)}.tag.b{background:#fde8e8;color:var(--bad)}
+textarea{width:100%;min-height:360px;border:1px solid #d3e3ea;border-radius:16px;padding:16px;font:inherit;font-size:14px;line-height:1.55;color:var(--ink)}
+.chat{max-width:900px}
+.q{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.q button{border:1px solid #cfe2ea;background:#fff;border-radius:160px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+.msg{border-radius:16px;padding:14px 16px;margin-bottom:10px;font-size:14px;line-height:1.5}
+.msg.u{background:var(--p2);color:#fff;margin-left:20%}.msg.a{background:var(--bg)}
+.how{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+.how div{background:var(--bg);border-radius:16px;padding:14px;font-size:13px;color:var(--g)}
+.how b{display:block;color:var(--ink);font-weight:500;font-size:14px;margin-bottom:6px}
+.how .hl{background:var(--p2);color:#e6f6fd}.how .hl b{color:#fff}
+.hidden{display:none}
+</style></head><body>
+<div class="demo">Демо-прототип Атвинты · данные условные · модель работает в контуре предприятия · АСУ ТП только на чтение</div>
+<div class="top"><div class="logo"><img src="pmh_logo.png" alt=""><div>ПАО «Кокс» · Коксовый цех<small>рабочее место начальника смены и диспетчера</small></div></div>
+<div class="tabs">
+<button class="tab on" data-t="s1">Смена</button><button class="tab" data-t="s2">График выдачи</button><button class="tab" data-t="s3">Машины и простои</button>
+<button class="tab" data-t="s4">Сдача смены</button><button class="tab" data-t="s5">Спросить регламент</button><button class="tab" data-t="s6">Журнал</button><button class="tab" data-t="s7">Как устроено</button></div>
+<div class="who">Начальник смены<br>Смена 2 · 25.11 · 08:00–20:00</div></div>
+
+<main>
+<section id="s1">
+ <h1>Коксовая батарея · текущая смена</h1>
+ <p class="sub">Данные архива АСУ ТП и журналов обновлены в 19:45. Отклонения считает код по нормам технологического режима, ИИ объясняет и готовит действия, решает начальник смены.</p>
+ <div class="kp">
+  <div><b>58 / 60</b><span>печей выдано: факт / график</span></div>
+  <div class="wr"><b>0,97</b><span>К1 · исполнение графика выдачи</span></div>
+  <div class="wr"><b>0,93</b><span>К2 · соблюдение периода коксования</span></div>
+  <div><b>0,99</b><span>К3 · серийность выдачи</span></div>
+  <div class="wr"><b>0,91</b><span>Кравн · равномерность температур КВ</span></div>
+  <div class="bad"><b>34 мин</b><span>простой машин за смену</span></div>
+  <div><b id="kdef">0</b><span>записей в журнал дефектов</span></div>
+ </div>
+ <div class="grid">
+  <div class="card">
+   <h2>Среднесменные температуры контрольных вертикалов, °C</h2>
+   <div class="sw"><button class="on" data-side="m">машинная сторона</button><button data-side="k">коксовая сторона</button></div>
+   <div class="chart" id="chart"><div class="band" id="band"></div></div>
+   <div class="legend"><span>простенок 1</span><span>коридор ±20 °C от средней по батарее</span><span>простенок 66</span></div>
+   <div class="ai" id="ai"></div>
+  </div>
+  <div class="card"><h2>Требует решения начальника смены</h2><div id="devs"></div>
+   <p class="note">Список собирает код по нормам режима и журналам. ИИ не ищет отклонения сам и не меняет цифры.</p></div>
+ </div>
+</section>
+
+<section id="s2" class="hidden">
+ <h1>График выдачи · батарея</h1>
+ <p class="sub">План — по утвержденному графику серийности, факт — из АСУ ТП. ИИ предлагает пересчет графика после задержки, утверждает диспетчер.</p>
+ <table style="margin-top:16px"><thead><tr><th>Печь</th><th>Загрузка</th><th>Выдача по графику</th><th>Факт</th><th>Отклонение</th><th>Период коксования</th><th>Статус</th></tr></thead><tbody id="gr"></tbody></table>
+ <div class="ai" id="grai"></div>
+</section>
+
+<section id="s3" class="hidden">
+ <h1>Машины коксовой стороны и простои</h1>
+ <p class="sub">Состояние машин по данным АСУ ТП и записям машинистов. Простои с причинами собираются для рапорта автоматически.</p>
+ <table style="margin-top:16px"><thead><tr><th>Машина</th><th>Состояние</th><th>Циклов за смену</th><th>Простой</th><th>Причина (из записей)</th></tr></thead><tbody id="mash"></tbody></table>
+ <div class="ai" id="mai"></div>
+</section>
+
+<section id="s4" class="hidden">
+ <h1>Сдача смены · черновик рапорта</h1>
+ <p class="sub">ИИ собрал черновик из данных смены, отклонений и решений начальника. Текст можно править; в журнал уходит только подписанный вариант.</p>
+ <textarea id="rap" style="margin-top:14px"></textarea>
+ <div class="btns"><button class="btn pk" id="sign">Подписать и передать смене 3</button><button class="btn gr" id="regen">Пересобрать черновик</button></div>
+ <p class="note" id="signnote"></p>
+</section>
+
+<section id="s5" class="hidden chat">
+ <h1>Спросить регламент</h1>
+ <p class="sub">Ответ только по документам, доступным начальнику смены, со ссылкой на пункт. Если в документах ответа нет — ассистент так и говорит.</p>
+ <div class="q" id="qs"></div><div id="msgs"></div>
+</section>
+
+<section id="s6" class="hidden">
+ <h1>Журнал действий</h1>
+ <p class="sub">Каждое действие системы, ассистента и людей. Без подтверждения начальника смены или диспетчера в системы ничего не уходит.</p>
+ <table style="margin-top:14px"><thead><tr><th>Время</th><th>Кто</th><th>Действие</th></tr></thead><tbody id="log"></tbody></table>
+</section>
+
+<section id="s7" class="hidden">
+ <h1>Как устроено</h1>
+ <p class="sub">Данные читаем, считает код, ИИ объясняет и готовит черновики, решает человек.</p>
+ <svg viewBox="0 0 1300 520" style="width:100%;margin-top:16px;background:var(--bg);border-radius:22px" font-family="Onest,Arial" font-size="14">
+  <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#006eb7"/></marker>
+   <marker id="ag" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f9d55"/></marker></defs>
+  <text x="30" y="40" font-size="16" font-weight="600" fill="#373737">Источники</text>
+  <g fill="#fff" stroke="#cfe2ea">
+   <rect x="30" y="58" width="230" height="64" rx="14"/><rect x="30" y="136" width="230" height="64" rx="14"/>
+   <rect x="30" y="214" width="230" height="64" rx="14"/><rect x="30" y="292" width="230" height="64" rx="14"/></g>
+  <g fill="#373737"><text x="46" y="85" font-weight="500">Архив АСУ ТП</text><text x="46" y="106" fill="#6b7378" font-size="12">температуры, давление, выдача</text>
+   <text x="46" y="163" font-weight="500">График выдачи</text><text x="46" y="184" fill="#6b7378" font-size="12">план серийности, факт</text>
+   <text x="46" y="241" font-weight="500">Журналы смены</text><text x="46" y="262" fill="#6b7378" font-size="12">машинисты, дефекты, простои</text>
+   <text x="46" y="319" font-weight="500">Нормы и регламенты</text><text x="46" y="340" fill="#6b7378" font-size="12">режим, инструкции, история ремонтов</text></g>
+  <text x="30" y="392" fill="#1f9d55" font-size="13" font-weight="500">только чтение,</text><text x="30" y="410" fill="#1f9d55" font-size="13" font-weight="500">без вмешательства в управление</text>
+  <g stroke="#1f9d55" stroke-width="2" marker-end="url(#ag)"><line x1="262" y1="90" x2="335" y2="150"/><line x1="262" y1="168" x2="335" y2="180"/><line x1="262" y1="246" x2="335" y2="215"/><line x1="262" y1="324" x2="335" y2="330"/></g>
+  <rect x="320" y="30" width="600" height="460" rx="22" fill="none" stroke="#006eb7" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="340" y="56" font-size="15" font-weight="600" fill="#006eb7">Контур ПАО «Кокс» · серверы предприятия, без выхода в интернет</text>
+  <rect x="340" y="76" width="270" height="170" rx="16" fill="#fff" stroke="#cfe2ea"/>
+  <text x="358" y="104" font-weight="600" fill="#373737">Слой данных и расчет</text>
+  <g fill="#6b7378" font-size="13"><text x="358" y="130">сбор и очистка данных смены</text><text x="358" y="152">К1, К2, К3, Кравн — по формулам цеха</text><text x="358" y="174">отклонения от коридора норм</text><text x="358" y="196">правила задают технологи</text><text x="358" y="218" fill="#006eb7">считает код, не модель</text></g>
+  <rect x="340" y="268" width="270" height="200" rx="16" fill="#fff" stroke="#cfe2ea"/>
+  <text x="358" y="296" font-weight="600" fill="#373737">Поиск по документам</text>
+  <g fill="#6b7378" font-size="13"><text x="358" y="322">нормы, регламенты, журналы</text><text x="358" y="344">ответ со ссылкой на пункт</text><text x="358" y="366">учитывает права сотрудника</text><text x="358" y="388">нет в документах — «не знаю»</text></g>
+  <rect x="640" y="76" width="260" height="200" rx="16" fill="#006eb7"/>
+  <text x="658" y="104" font-weight="600" fill="#fff">Языковая модель</text>
+  <g fill="#e6f6fd" font-size="13"><text x="658" y="130">открытая модель на серверах</text><text x="658" y="152">предприятия</text><text x="658" y="178">объясняет отклонения</text><text x="658" y="200">готовит записи, пересчет графика,</text><text x="658" y="222">черновик рапорта</text><text x="658" y="252" fill="#a6e7ff">ничего не меняет в системах сама</text></g>
+  <rect x="640" y="296" width="260" height="172" rx="16" fill="#fff" stroke="#cfe2ea"/>
+  <text x="658" y="324" font-weight="600" fill="#373737">Журнал действий</text>
+  <g fill="#6b7378" font-size="13"><text x="658" y="350">кто, что и когда сделал</text><text x="658" y="372">запросы к модели и ответы</text><text x="658" y="394">подписанные рапорты</text><text x="658" y="416">для разбора и аудита ИБ</text></g>
+  <g stroke="#006eb7" stroke-width="2" marker-end="url(#ar)"><line x1="612" y1="160" x2="636" y2="160"/><line x1="612" y1="360" x2="636" y2="230"/><line x1="770" y1="278" x2="770" y2="292"/></g>
+  <text x="960" y="40" font-size="16" font-weight="600" fill="#373737">Люди</text>
+  <rect x="960" y="58" width="310" height="196" rx="16" fill="#fff" stroke="#cfe2ea"/>
+  <text x="978" y="86" font-weight="600" fill="#373737">Веб-интерфейс, вход через SSO</text>
+  <g fill="#6b7378" font-size="13"><text x="978" y="114">начальник смены</text><text x="978" y="138">диспетчер производства</text><text x="978" y="162">технолог · механик цеха</text><text x="978" y="190" fill="#006eb7">права по ролям</text></g>
+  <g stroke="#006eb7" stroke-width="2" marker-end="url(#ar)"><line x1="902" y1="150" x2="956" y2="150"/></g>
+  <rect x="960" y="296" width="310" height="172" rx="16" fill="#fff" stroke="#c62828" stroke-width="1.5"/>
+  <text x="978" y="324" font-weight="600" fill="#373737">Записи в системы</text>
+  <g fill="#6b7378" font-size="13"><text x="978" y="350">журнал дефектов, заявки ТОиР,</text><text x="978" y="372">утвержденный график, рапорт</text><text x="978" y="402" fill="#c62828" font-weight="500">только после подтверждения</text><text x="978" y="422" fill="#c62828" font-weight="500">начальника смены или диспетчера</text></g>
+  <g stroke="#c62828" stroke-width="2" marker-end="url(#ar)"><line x1="1115" y1="256" x2="1115" y2="292"/></g>
+  <text x="1124" y="280" fill="#c62828" font-size="12">подтвердил</text>
+ </svg>
+ <div class="how">
+  <div><b>1. Чтение</b>Архив АСУ ТП, график выдачи, журналы машинистов и дефектов, нормы технологического режима — только чтение</div>
+  <div><b>2. Расчет</b>К1, К2, К3, Кравн, отклонения температур и графика — код по формулам и нормам цеха</div>
+  <div class="hl"><b>3. Объяснение</b>Модель в контуре предприятия связывает отклонение с нормами, историей ремонтов и записями смены</div>
+  <div><b>4. Решение</b>Начальник смены и диспетчер подтверждают записи, заявки и пересчет графика</div>
+  <div><b>5. Сдача смены</b>Черновик рапорта собирается сам, подписывает начальник смены; все действия в журнале</div>
+ </div>
+ <p class="note" style="margin-top:16px">Для пилота: выгрузка архива по одной батарее за 1–3 месяца, нормы технологического режима и формы рапортов, 2–3 встречи с начальником смены, диспетчером и технологом. Формулы коэффициентов и коридоры норм задают специалисты цеха.</p>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const now=()=>new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+const L=[];function log(w,a){L.unshift([now(),w,a]);$('log').innerHTML=L.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');}
+// температуры КВ (условно): средняя ~1290, коридор ±20
+const base=i=>1290+Math.round(9*Math.sin(i*0.55)+(i%4)*2-3);
+const TM=[...Array(66)].map((_,i)=>base(i)), TK=[...Array(66)].map((_,i)=>base(i)+12);
+TM[22]=1252;TM[23]=1263;TK[22]=1268;TK[23]=1276;TM[47]=1314;TK[47]=1327;
+let side='m',made=0;
+function avg(a){return Math.round(a.reduce((s,x)=>s+x,0)/a.length)}
+function chart(sel){const T=side==='m'?TM:TK,A=avg(T),LO=A-20,HI=A+20,MIN=A-60,MAX=A+50,h=v=>(v-MIN)/(MAX-MIN)*100;
+ const c=$('chart');c.querySelectorAll('i').forEach(x=>x.remove());$('band').style.bottom=h(LO)+'%';$('band').style.height=(h(HI)-h(LO))+'%';
+ T.forEach((v,i)=>{const e=document.createElement('i');e.style.height=h(v)+'%';e.title=`Простенок ${i+1}: ${v} °C (средняя ${A})`;if(v<LO)e.className='lo';if(v>HI)e.className='hi';if(sel.includes(i))e.classList.add('sel');c.appendChild(e);});}
+document.querySelectorAll('.sw button').forEach(b=>b.onclick=()=>{side=b.dataset.side;document.querySelectorAll('.sw button').forEach(x=>x.classList.toggle('on',x===b));chart(cur.sel||[]);});
+const DEVS=[
+ {id:'d1',k:'',tag:'режим',t:'Простенки 23–24 холоднее средней на 38 °C',s:'Машинная сторона, 3 замера подряд; соседние простенки в коридоре',sel:[22,23],
+  calc:'Расчет: средняя по батарее 1290 °C, коридор ±20 °C; простенок 23 — 1252 °C, 24 — 1263 °C; на коксовой стороне те же простенки ниже коридора; тренд −4 °C за замер.',
+  ai:'Отклонение локальное и с обеих сторон — похоже на подвод газа или воздуха на этом участке, а не на общий режим обогрева. По нормам режима нужно проверить регулировку обогрева простенков 23–24 и поставить печи 23–24 на контроль готовности кокса перед выдачей.',
+  src:[['Нормы технологического режима коксовых батарей (открытый источник)','коэффициент равномерности среднесуточных температур контрольных вертикалов учитывает простенки с отклонением в пределах ±20 °C от среднесуточной'],['Инструкция цеха по обогреву','в пилоте здесь будет пункт о действиях при выходе простенка за коридор'],['Журнал дефектов цеха','в пилоте ассистент подтянет историю ремонтов этих простенков']],
+  act:'Записать в журнал дефектов и вызвать обогревальщика',res:'Записано в журнал дефектов, обогревальщику отправлено задание по простенкам 23–24'},
+ {id:'d2',k:'w',tag:'график',t:'Печи 41 и 43 выданы с задержкой 25 и 22 мин',s:'После простоя коксовыталкивателя 14:05–14:30; К1 снизился до 0,97',sel:[],
+  calc:'Расчет: задержка по 2 печам из 60; период коксования печи 41 — 18 ч 05 мин при графике 17 ч 40 мин; влияние на К2 — 0,93.',
+  ai:'Задержка вызвана простоем коксовыталкивателя, а не режимом печей. Если оставить график без изменений, следующие 4 печи серии тоже выйдут с задержкой. Предлагаю сдвинуть выдачу печей 45–51 на 20 минут и вернуться в график к 23:00; пересчет на вкладке «График выдачи».',
+  src:[['Инструкция цеха по графику выдачи','в пилоте здесь будет пункт о порядке изменения графика']],
+  act:'Отправить пересчет графика диспетчеру',res:'Пересчет графика отправлен диспетчеру на утверждение'},
+ {id:'d3',k:'',tag:'экология',t:'Дымление двери печи 33, коксовая сторона',s:'Отметка машиниста двересъемной машины в 16:40; повторно в 18:10',sel:[32],
+  calc:'Расчет: 2 записи за смену по одной двери; за неделю по двери 33 — 3 записи.',
+  ai:'Повторяющееся дымление одной двери обычно связано с уплотнением или очисткой рамы. Это вопрос газоплотности и экологии в черте города, поэтому стоит закрыть его в этой смене: очистка рамы и проверка двери при следующем обслуживании печи 33.',
+  src:[['Инструкция цеха по обслуживанию дверей','в пилоте здесь будет пункт о действиях при дымлении двери']],
+  act:'Создать задание на очистку рамы двери 33',res:'Задание на очистку рамы двери 33 создано'},
+ {id:'d4',k:'d',tag:'на оценку',t:'Давление в газосборнике: 3 скачка в 14:10–14:30',s:'Совпало с простоем выталкивателя и задержкой выдачи',sel:[],
+  calc:'Расчет: 3 выхода за коридор до 2 мин; после 14:30 стабильно.',
+  ai:'По времени совпадает с задержкой выдачи и отсечкой печей от газосборника. Однозначного правила в документах нет — нужна оценка технолога.',
+  src:[['Нормы технологического режима коксовых батарей (открытый источник)','не менее чем за 20 минут до начала выдачи печь отсекают от газосборника']],
+  act:'Отправить технологу на оценку',res:'Отправлено технологу на оценку'}];
+let cur=DEVS[0];
+function pick(d){cur=d;document.querySelectorAll('.dev').forEach(x=>x.classList.toggle('on',x.dataset.id===d.id));chart(d.sel);
+ $('ai').innerHTML=`<div class="h"><b>ИИ</b>объяснение · модель в контуре предприятия</div><div class="calc">${d.calc}</div><p>${d.ai}</p>${d.src.map(s=>`<div class="src"><b>${s[0]}:</b> «${s[1]}»</div>`).join('')}
+ <div class="btns"><button class="btn pk" id="ok">${d.act}</button><button class="btn gr" id="no">Не согласен, решу сам</button></div><p class="note">Выполнится только после нажатия. В журнал запишется, кто принял решение.</p>`;
+ const ok=$('ok'),no=$('no');if(d.done){ok.disabled=no.disabled=true;ok.textContent=d.done;}
+ ok.onclick=()=>{d.done=d.res;ok.disabled=no.disabled=true;ok.textContent=d.res;if(d.id!=='d2'&&d.id!=='d4'){made++;$('kdef').textContent=made;}
+  document.querySelector(`.dev[data-id=${d.id}]`).classList.add('done');log('ИИ-ассистент','Подготовил действие: '+d.act);log('Начальник смены','Подтвердил: '+d.res);rap();};
+ no.onclick=()=>{d.done='Решение оставлено за начальником смены';ok.disabled=no.disabled=true;ok.textContent=d.done;log('Начальник смены','Отклонил предложение: '+d.t);rap();};}
+$('devs').innerHTML=DEVS.map(d=>`<div class="dev" data-id="${d.id}"><div class="t">${d.t}<em class="${d.k}">${d.tag}</em></div><p>${d.s}</p></div>`).join('');
+document.querySelectorAll('.dev').forEach(x=>x.onclick=()=>pick(DEVS.find(d=>d.id===x.dataset.id)));
+// график выдачи
+const G=[[37,'01:20','19:00','19:02','+2 мин','17 ч 42 мин',''],[39,'01:28','19:08','19:11','+3 мин','17 ч 43 мин',''],[41,'20:35*','14:15','14:40','+25 мин','18 ч 05 мин','w'],[43,'20:43*','14:23','14:45','+22 мин','18 ч 02 мин','w'],[45,'02:00','19:40','—','ожидание','—','p'],[47,'02:08','19:48','—','ожидание','—','p'],[49,'02:16','19:56','—','ожидание','—','p']];
+$('gr').innerHTML=G.map(r=>`<tr class="${r[6]==='w'?'late':''}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="tag ${r[6]==='w'?'w':''}">${r[6]==='w'?'задержка':r[6]==='p'?'по плану':'выдана'}</span></td></tr>`).join('');
+$('grai').innerHTML=`<div class="h"><b>ИИ</b>пересчет графика · черновик для диспетчера</div><div class="calc">Расчет: при текущем графике печи 45–51 выйдут с задержкой 15–20 мин; сдвиг на 20 мин возвращает график к 23:00 без нарушения периода коксования по нормам (демо).</div>
+<p>Предлагаю сдвинуть выдачу печей 45, 47, 49, 51 на 20 минут. Серийность сохраняется, К1 к концу суток вернется к 0,99.</p><div class="btns"><button class="btn pk" id="gok">Утвердить пересчет (диспетчер)</button><button class="btn gr" id="gno">Оставить график</button></div>`;
+$('gok').onclick=()=>{$('gok').disabled=$('gno').disabled=true;$('gok').textContent='Пересчет утвержден диспетчером';log('Диспетчер','Утвержден пересчет графика: печи 45–51 +20 мин');rap();};
+$('gno').onclick=()=>{$('gok').disabled=$('gno').disabled=true;log('Диспетчер','График оставлен без изменений');};
+// машины
+const M=[['Коксовыталкиватель № 2','в работе',29,'25 мин','14:05–14:30: заклинивание штанги, устранено слесарем','b'],['Загрузочный вагон № 1','в работе',30,'0 мин','—',''],['Двересъемная машина № 2','в работе',29,'9 мин','16:35–16:44: очистка рамы двери 33','w'],['Тушильный вагон № 1','в работе',29,'0 мин','—','']];
+$('mash').innerHTML=M.map(r=>`<tr class="${r[5]==='b'?'miss':''}"><td>${r[0]}</td><td><span class="tag">${r[1]}</span></td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join('');
+$('mai').innerHTML=`<div class="h"><b>ИИ</b>анализ простоев за 30 дней</div><p>Заклинивание штанги коксовыталкивателя № 2 — третий случай за месяц (02.11, 17.11, 25.11), все во вторую половину смены. Стоит включить проверку штанги в ближайший планово-предупредительный ремонт.</p>
+<div class="src"><b>Журнал простоев (демо):</b> 02.11 — 18 мин, 17.11 — 22 мин, 25.11 — 25 мин, причина — заклинивание штанги</div><div class="btns"><button class="btn pk" id="mok">Предложить в план ППР</button></div>`;
+$('mok').onclick=()=>{$('mok').disabled=true;$('mok').textContent='Предложение отправлено механику цеха';log('Начальник смены','Отправил механику предложение включить штангу выталкивателя № 2 в ППР');rap();};
+// рапорт
+function rap(){const dn=DEVS.filter(d=>d.done).map(d=>'— '+d.t+': '+d.done.toLowerCase()+'.').join('\n')||'— решения по отклонениям пока не приняты.';
+ const open=DEVS.filter(d=>!d.done).map(d=>'— '+d.t+'.').join('\n')||'— нет.';
+ $('rap').value=`РАПОРТ НАЧАЛЬНИКА СМЕНЫ · коксовая батарея · смена 2 · 25.11, 08:00–20:00
+Начальник смены: ____________
+1. Выдача: 58 печей при графике 60. К1 = 0,97; К2 = 0,93; К3 = 0,99.
+2. Обогрев: Кравн = 0,91. Вне коридора ±20 °C — простенки 23–24 (ниже средней на 27–38 °C).
+3. Простои машин: 34 мин — коксовыталкиватель № 2, 25 мин (заклинивание штанги, устранено); двересъемная машина № 2, 9 мин (очистка рамы двери 33).
+4. Экология: дымление двери печи 33 (16:40, 18:10).
+5. Решения за смену:
+${dn}
+6. Передается следующей смене:
+${open}
+— Контроль готовности кокса в печах 23–24 перед выдачей.`;}
+rap();
+$('regen').onclick=()=>{rap();log('ИИ-ассистент','Пересобрал черновик рапорта по данным смены');};
+$('sign').onclick=()=>{$('sign').disabled=true;$('sign').textContent='Подписано и передано смене 3';$('signnote').textContent='Рапорт подписан '+now()+'. Изменения после подписи — только новой записью.';log('Начальник смены','Подписал рапорт и передал смену');};
+// регламент
+const QA=[['За сколько минут до выдачи отсекать печь от газосборника?','Не менее чем за 20 минут до начала выдачи печь отсекают от газосборника и сообщают с атмосферой открытием крышки стояка.',[['Нормы технологического режима коксовых батарей (открытый источник)','не менее чем за 20 минут до начала выдачи печь отсекают от газосборника']]],
+ ['Что делать с обогревом, если выдача остановлена?','При прекращении выдачи кокса, кроме цикличных простоев, расход газа на обогрев печей уменьшают соответственно.',[['Нормы технологического режима коксовых батарей (открытый источник)','в случае прекращения выдачи кокса расход газа на обогрев должен быть соответственно уменьшен']]],
+ ['Какие показатели прочности кокса у последней партии?',null,[]]];
+$('qs').innerHTML=QA.map((q,i)=>`<button data-i="${i}">${q[0]}</button>`).join('');
+document.querySelectorAll('#qs button').forEach(b=>b.onclick=()=>{const q=QA[b.dataset.i];$('msgs').innerHTML+=`<div class="msg u">${q[0]}</div>`+(q[1]?`<div class="msg a">${q[1]}${q[2].map(s=>`<div class="src"><b>Источник — ${s[0]}:</b> «${s[1]}»</div>`).join('')}</div>`:`<div class="msg a">В доступных вам документах ответа нет: показатели прочности ведет лаборатория ОТК. Могу подготовить запрос в лабораторию.<div class="src"><b>Почему так:</b> ассистент не отвечает без подтверждения в документах.</div></div>`);log('ИИ-ассистент','Ответил на вопрос: «'+q[0]+'»');});
+// вкладки
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));['s1','s2','s3','s4','s5','s6','s7'].forEach(s=>$(s).classList.toggle('hidden',s!==t.dataset.t));});
+pick(DEVS[0]);log('Система','Загружены данные архива АСУ ТП и журналов смены (только чтение)');
+</script></body></html>
